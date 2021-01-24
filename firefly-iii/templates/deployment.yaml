@@ -34,6 +34,42 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.secrets.existingSecret }}
+                  name: {{ .Values.secrets.existingSecret -}}
+                  {{ else }}
+                  name: {{ include "firefly-iii.fullname" . }}
+                  {{- end }}
+                  key: app-key
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.secrets.existingSecret }}
+                  name: {{ .Values.secrets.existingSecret -}}
+                  {{ else }}
+                  name: {{ include "firefly-iii.fullname" . }}
+                  {{- end }}
+                  key: db-database
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.secrets.existingSecret }}
+                  name: {{ .Values.secrets.existingSecret -}}
+                  {{ else }}
+                  name: {{ include "firefly-iii.fullname" . }}
+                  {{- end }}
+                  key: db-username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  {{- if .Values.secrets.existingSecret }}
+                  name: {{ .Values.secrets.existingSecret -}}
+                  {{ else }}
+                  name: {{ include "firefly-iii.fullname" . }}
+                  {{- end }}
+                  key: db-password
             {{- range $key, $val := .Values.env }}
             - name: {{ $key }}
               value: {{ $val | quote }}
@@ -46,7 +82,7 @@ spec:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: 60
+            initialDelaySeconds: 300
             periodSeconds: 10
             timeoutSeconds: 5
             successThreshold: 1

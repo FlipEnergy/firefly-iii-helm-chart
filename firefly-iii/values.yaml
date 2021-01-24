@@ -10,18 +10,25 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+secrets:
+  # Set to the secret name if using your own existing secret
+  existingSecret: ''
+
+  # If not using your own existing secret, set the following:
+
+  # Leave appKey blank to generate one upon EVERY release
+  # If you want Firefly-iii to persist, replace appKey with with a random string of exactly 32 chars
+  # You can generate one with command `head /dev/urandom | LANG=C tr -dc 'A-Za-z0-9' | head -c 32`
+  appKey: ''
+  dbDatabase: firefly
+  dbUsername: CHANGEME
+  dbPassword: CHANGEME
 
 # See https://raw.githubusercontent.com/firefly-iii/firefly-iii/main/.env.example for list of all variables
 env:
-  # Change the APP_KEY to a different 32-char long key
-  # You can generate one with command `head /dev/urandom | LANG=C tr -dc 'A-Za-z0-9' | head -c 32`
-  APP_KEY: TJE8S3B9FBR7LFNhJSHDMPVFhXpDiyJa
   DB_HOST: firefly-iii-mysql
   DB_PORT: 3306
   DB_CONNECTION: mysql
-  DB_DATABASE: firefly
-  DB_USERNAME: CHANGEME
-  DB_PASSWORD: CHANGEME
 
 imagePullSecrets: []
 nameOverride: ""
