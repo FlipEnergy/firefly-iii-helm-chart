@@ -94,154 +94,82 @@ affinity: {}
 mysql:
   enabled: false
   
-  # MySQL dependency. See Bitnami's mysql chart for values paramters
-
-  ## MySQL Authentication parameters
+  ## Specify password for root user
   ##
-  auth:
-    ## MySQL root password
-    ## ref: https://github.com/bitnami/bitnami-docker-mysql#setting-the-root-password-on-first-run
-    ##
-    rootPassword: ROOT_CHANGEME
-    ## MySQL custom user and database
-    ## ref: https://github.com/bitnami/bitnami-docker-mysql/blob/master/README.md#creating-a-database-on-first-run
-    ## ref: https://github.com/bitnami/bitnami-docker-mysql/blob/master/README.md#creating-a-database-user-on-first-run
-    ##
-    database: firefly
-    username: CHANGEME
-    password: CHANGEME
+  ## Default: random 10 character string
+  # mysqlRootPassword: testing
 
-  ## MySQL Primary parameters
+  ## Create a database user
   ##
-  primary:
-    updateStrategy: RollingUpdate
+  mysqlUser: CHANGEME
+  ## Default: random 10 character string
+  mysqlPassword: CHANGEME
 
-    ## Affinity for MySQL primary pods assignment
-    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-    ## Note: podAffinityPreset, podAntiAffinityPreset, and  nodeAffinityPreset will be ignored when it's set
-    ##
-    affinity: {}
+  ## Allow unauthenticated access, uncomment to enable
+  ##
+  # mysqlAllowEmptyPassword: true
 
-    ## Node labels for MySQL primary pods assignment
-    ## ref: https://kubernetes.io/docs/user-guide/node-selection/
-    ##
-    nodeSelector: {}
+  ## Create a database
+  ##
+  mysqlDatabase: firefly
 
-    ## Tolerations for MySQL primary pods assignment
-    ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-    ##
-    tolerations: []
+  ## Node selector
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+  nodeSelector: {}
 
-    ## MySQL primary Pod security context
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
-    ##
-    podSecurityContext:
-      enabled: true
-      fsGroup: 1001
+  ## Affinity
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
 
-    ## MySQL primary container security context
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
-    ##
-    containerSecurityContext:
-      enabled: true
-      runAsUser: 1001
+  ## Tolerations for pod assignment
+  ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+  ##
+  tolerations: []
 
-    ## MySQL primary container's resource requests and limits
-    ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
-    ##
-    resources:
-      # We usually recommend not to specify default resources and to leave this as a conscious
-      # choice for the user. This also increases chances charts run on environments with little
-      # resources, such as Minikube. If you do want to specify resources, uncomment the following
-      # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-      limits: {}
-      #   memory: 256Mi
-      #   cpu: 250m
-      requests: {}
-      #   memory: 256Mi
-      #   cpu: 250m
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 3
 
-    ## MySQL primary container's liveness and readiness probes
-    ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes
-    ##
-    livenessProbe:
-      enabled: true
-      initialDelaySeconds: 120
-      periodSeconds: 10
-      timeoutSeconds: 1
-      failureThreshold: 3
-      successThreshold: 1
-    readinessProbe:
-      enabled: true
-      initialDelaySeconds: 30
-      periodSeconds: 10
-      timeoutSeconds: 1
-      failureThreshold: 3
-      successThreshold: 1
+  readinessProbe:
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 3
 
-    ## Enable persistence using Persistent Volume Claims
-    ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ## Persist data to a persistent volume
+  persistence:
+    enabled: false
+    ## database data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
     ##
-    persistence:
-      ## If true, use a Persistent Volume Claim, If false, use emptyDir
-      ##
-      enabled: true
-      ## Name of existing PVC to hold MySQL Primary data
-      ## NOTE: When it's set the rest of persistence parameters are ignored
-      ##
-      # existingClaim:
-      ## Persistent Volume Storage Class
-      ## If defined, storageClassName: <storageClass>
-      ## If set to "-", storageClassName: "", which disables dynamic provisioning
-      ## If undefined (the default) or set to null, no storageClassName spec is
-      ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-      ##   GKE, AWS & OpenStack)
-      ##
-      # storageClass: "-"
-      ## Persistent Volume Claim annotations
-      ##
-      annotations: {}
-      ## Persistent Volume Access Mode
-      ##
-      accessModes:
-        - ReadWriteOnce
-      ## Persistent Volume size
-      ##
-      size: 8Gi
-      ## selector can be used to match an existing PersistentVolume
-      ## selector:
-      ##   matchLabels:
-      ##     app: my-app
-      selector: {}
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+    annotations: {}
 
-    ## MySQL Primary Service parameters
-    ##
-    service:
-      ## Service type
-      ##
-      type: ClusterIP
-      ## Service port
-      ##
-      port: 3306
-      ## Specify the nodePort value for the LoadBalancer and NodePort service types.
-      ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
-      ##
-      nodePort: ""
-      ## Service clusterIP
-      ##
-      # clusterIP: None
-      clusterIP: ""
-      ## Set the LoadBalancer service type to internal only.
-      ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
-      ##
-      loadBalancerIP: ""
-      ## Load Balancer sources
-      ## https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service
-      ## E.g.
-      ## loadBalancerSourceRanges:
-      ##   - 10.10.10.0/24
-      ##
-      loadBalancerSourceRanges: []
-      ## Provide any additional annotations which may be required
-      ##
-      annotations: {}
+  ## Use an alternate scheduler, e.g. "stork".
+  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+  ##
+  # schedulerName:
+
+  ## Security context
+  securityContext:
+    enabled: false
+    runAsUser: 999
+    fsGroup: 999
+
+  ## Configure resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  ##
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m

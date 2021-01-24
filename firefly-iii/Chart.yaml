@@ -30,6 +30,6 @@ maintainers:
 
 dependencies:
 - name: mysql
-  version: 8.2.7
-  repository: https://charts.bitnami.com/bitnami
+  version: 1.6.9
+  repository: https://helm.wso2.com
   condition: mysql.enabled

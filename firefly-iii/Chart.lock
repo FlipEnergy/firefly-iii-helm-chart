@@ -1,6 +1,6 @@
 dependencies:
 - name: mysql
-  repository: https://charts.bitnami.com/bitnami
-  version: 8.2.7
-digest: sha256:d068d7e9bb729a387770c4fa7b21a743fa15da3bc7abe89646bf951467ec9a7e
-generated: "2021-01-23T19:19:07.5504108-08:00"
+  repository: https://helm.wso2.com
+  version: 1.6.9
+digest: sha256:bdbd774f845f1f0f4b7346e75b80f6c2e244cf92cf9feacf3d4807f8e50f9bce
+generated: "2021-01-23T23:55:37.539628-08:00"
