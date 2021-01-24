@@ -1,3 +1,5 @@
+# Deprecated
+The chart will run fine but it does not have support for cronjobs nor the other tools to automate importing.
 # Helm chart for deploying Firefly III to K8s
 
 Bare bones helm chart for deploying [Firefly III](https://www.firefly-iii.org/) to k8s.
