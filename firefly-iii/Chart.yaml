@@ -33,3 +33,5 @@ dependencies:
   version: 1.6.9
   repository: https://helm.wso2.com
   condition: mysql.enabled
+
+deprecated: true
